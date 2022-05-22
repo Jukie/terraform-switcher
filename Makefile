@@ -1,5 +1,3 @@
-
-
 EXE  := tfswitch
 PKG  := github.com/warrensbox/terraform-switcher
 VER := $(shell git ls-remote --tags git@github.com:warrensbox/terraform-switcher.git | awk '{if ($$2 ~ "\\^\\{\\}$$") next; print vers[split($$2,vers,"\\/")]}' | sort -n -t. -k1,1 -k2,2 -k3,3 | tail -1)
