@@ -14,17 +14,26 @@ func GetSemver(tfconstraint *string, mirrorURL *string) (*Release, error) {
 		return nil, err
 	}
 	fmt.Printf("Reading required version from constraint: %s\n", *tfconstraint)
-	tfversion, err := SemVerParser(tfconstraint, tflist)
+	tfversion, err := SemVerParser(tfconstraint, tflist, false)
 	return tfversion, err
 }
 
 // ValidateSemVer : Goes through the list of terraform version, return a valid tf version for contraint provided
-func SemVerParser(tfconstraint *string, tflist []*Release) (*Release, error) {
+func SemVerParser(tfconstraint *string, tflist []*Release, preRelease bool) (*Release, error) {
 	constraints, err := semver.NewConstraint(*tfconstraint) //NewConstraint returns a Constraints instance that a Version instance can be checked against
 	if err != nil {
 		return nil, fmt.Errorf("error parsing constraint: %q", err)
 	}
 	for _, tfvals := range tflist {
+		if preRelease {
+			if tfvals.IsPrerelease {
+				if constraints.Check(tfvals.Version) {
+					fmt.Printf("Matched version: %s\n", tfvals.Version)
+					return tfvals, nil
+				}
+			}
+			continue
+		}
 		if constraints.Check(tfvals.Version) {
 			fmt.Printf("Matched version: %s\n", tfvals.Version)
 			return tfvals, nil

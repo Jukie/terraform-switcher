@@ -25,7 +25,7 @@ var releasesRaw = []*lib.Release{
 // Test version 1.1
 func TestSemverParserCase1(t *testing.T) {
 	tfconstraint := "1.1"
-	tfversion, err := lib.SemVerParser(&tfconstraint, releasesRaw)
+	tfversion, err := lib.SemVerParser(&tfconstraint, releasesRaw, false)
 	if err != nil {
 		t.Fatalf("%q", err)
 	}
@@ -46,7 +46,7 @@ func TestSemverParserCase1(t *testing.T) {
 // Test version ~> 1.1 should return  1.1.4
 func TestSemverParserCase2(t *testing.T) {
 	tfconstraint := "~> 1.1.0"
-	tfversion, err := lib.SemVerParser(&tfconstraint, releasesRaw)
+	tfversion, err := lib.SemVerParser(&tfconstraint, releasesRaw, false)
 	if err != nil {
 		t.Fatalf("%q", err)
 	}
@@ -67,7 +67,7 @@ func TestSemverParserCase2(t *testing.T) {
 func TestSemverParserCase3(t *testing.T) {
 
 	tfconstraint := "~> 1.A.0"
-	_, err := lib.SemVerParser(&tfconstraint, releasesRaw)
+	_, err := lib.SemVerParser(&tfconstraint, releasesRaw, false)
 	if err != nil {
 		t.Logf("This test is suppose to error %v [expected]", tfconstraint)
 	} else {
@@ -80,7 +80,7 @@ func TestSemverParserCase3(t *testing.T) {
 func TestSemverParserCase4(t *testing.T) {
 
 	tfconstraint := ">= 1.0, < 1.4"
-	tfversion, err := lib.SemVerParser(&tfconstraint, releasesRaw)
+	tfversion, err := lib.SemVerParser(&tfconstraint, releasesRaw, false)
 	if err != nil {
 		t.Fatalf("%q", err)
 	}
@@ -101,7 +101,7 @@ func TestSemverParserCase4(t *testing.T) {
 func TestSemverParserCase5(t *testing.T) {
 
 	tfconstraint := ">= 1.0"
-	tfversion, err := lib.SemVerParser(&tfconstraint, releasesRaw)
+	tfversion, err := lib.SemVerParser(&tfconstraint, releasesRaw, false)
 	if err != nil {
 		t.Fatalf("%q", err)
 	}

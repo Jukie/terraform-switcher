@@ -47,24 +47,11 @@ func GetTFLatestImplicit(mirrorURL string, preRelease bool, version string) (*Re
 	if err != nil {
 		return nil, err
 	}
-	if preRelease {
-		semver := fmt.Sprintf(`%s{1}\.\d+\-[a-zA-z]+\d*`, version)
-		r, err := regexp.Compile(semver)
-		if err != nil {
-			return nil, err
-		}
-		for _, release := range releases {
-			if r.MatchString(release.Version.String()) {
-				fmt.Printf("Matched version: %s\n", release.Version)
-				return release, nil
-			}
-		}
-		return nil, fmt.Errorf("Error: no match for requested version: %s", version)
-	} else {
+	if !preRelease {
 		version = fmt.Sprintf("~> %v", version)
-		semv, err := SemVerParser(&version, releases)
-		return semv, err
 	}
+	semv, err := SemVerParser(&version, releases, preRelease)
+	return semv, err
 }
 
 // httpGet : generic http get client for the given url and query parameters.
